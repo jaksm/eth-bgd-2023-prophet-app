@@ -125,7 +125,6 @@ const MetamaskProvider = ({ children }: { children: ReactNode }) => {
       ) : (
         children
       )}
-      {children}
     </MetamaskContext.Provider>
   );
 };
