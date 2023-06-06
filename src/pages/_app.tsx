@@ -4,7 +4,7 @@ import { api } from "../utils/api";
 
 import classNames from "classnames";
 import { Roboto_Mono } from "next/font/google";
-import MetamaskProvider from "../MetamaskProvider";
+import MetamaskProvider from "../context/MetamaskProvider";
 
 const font = Roboto_Mono({
   subsets: ["latin", "cyrillic", "cyrillic-ext", "greek", "latin-ext"],

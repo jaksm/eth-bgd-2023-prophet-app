@@ -1,4 +1,5 @@
 import { IconSpiral } from "@tabler/icons-react";
+import * as ethers from "ethers";
 import { useRouter } from "next/router";
 import {
   createContext,
@@ -10,8 +11,14 @@ import {
   type ReactNode,
 } from "react";
 
+const provider =
+  typeof window !== "undefined"
+    ? new ethers.BrowserProvider((window as any).ethereum)
+    : null;
+
 export const MetamaskContext = createContext<{
   account?: string;
+  balance?: string;
   error?: string;
   connectWallet: () => Promise<void>;
 } | null>(null);
@@ -25,10 +32,11 @@ const MetamaskProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   const [account, setAccount] = useState<string>();
+  const [balance, setBalance] = useState<string>("0.0");
   const [error, setError] = useState<string>();
 
   const checkEthereumExists = () => {
-    if (!ethereum) {
+    if (!ethereum || !provider) {
       setError("Please Install MetaMask.");
       return false;
     }
@@ -43,6 +51,10 @@ const MetamaskProvider = ({ children }: { children: ReactNode }) => {
       const accounts = await ethereum.request({
         method: "eth_accounts",
       });
+
+      const balance = await provider!.getBalance(accounts[0]);
+      const balanceInEther = ethers.formatEther(balance || 0);
+      setBalance(balanceInEther);
 
       setAccount(accounts[0]);
     } catch (err) {
@@ -91,29 +103,28 @@ const MetamaskProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (account && router.pathname.includes("/connect-wallet")) {
-      router.push("/");
+      router.push("/profile");
       return;
     }
   }, [account, router]);
 
   const value = useMemo(() => {
     if (checkEthereumExists()) {
-      return { account, error, connectWallet };
+      return { account, error, connectWallet, balance };
     }
 
     return null;
-  }, [account, connectWallet, error]);
-
-  if (isLoading) {
-    return (
-      <div className="flex h-screen w-full flex-col items-center justify-center bg-black text-white heropattern-topography-white/10">
-        <IconSpiral size="64px" className="animate-spin" />
-      </div>
-    );
-  }
+  }, [account, connectWallet, error, balance]);
 
   return (
     <MetamaskContext.Provider value={value}>
+      {isLoading ? (
+        <div className="flex h-screen w-full flex-col items-center justify-center bg-black text-white heropattern-topography-white/10">
+          <IconSpiral size="64px" className="animate-spin" />
+        </div>
+      ) : (
+        children
+      )}
       {children}
     </MetamaskContext.Provider>
   );

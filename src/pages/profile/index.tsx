@@ -7,7 +7,6 @@ import {
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
-import { useMetamask } from "../../MetamaskProvider";
 import { Avatar, SIZES } from "../../components/Avatar";
 import { Button, ButtonActions } from "../../components/Button";
 import { Grid } from "../../components/Grid";
@@ -16,6 +15,7 @@ import { OwnedItemCard } from "../../components/cards/OwnedItemCard";
 import { CreateAuctionDialog } from "../../components/dialogs/CreateAuctionDialog";
 import { currency } from "../../components/formatter";
 import { LayoutSidebar } from "../../components/layouts/LayoutSidebar";
+import { useMetamask } from "../../context/MetamaskProvider";
 import { api } from "../../utils/api";
 
 const Sell: NextPage = () => {
@@ -51,7 +51,7 @@ const Sell: NextPage = () => {
                         className="text-white"
                       />
                       <h1 className="text-4xl font-bold text-white">
-                        {currency.format(0.0000123)} ETH
+                        {metamask?.} ETH
                       </h1>
                     </div>
                   </div>

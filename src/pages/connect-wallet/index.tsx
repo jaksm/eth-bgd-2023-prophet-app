@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { useMetamask } from "../../MetamaskProvider";
+import { useMetamask } from "../../context/MetamaskProvider";
 
 const ConnectWallet: NextPage = () => {
   const metamask = useMetamask();
