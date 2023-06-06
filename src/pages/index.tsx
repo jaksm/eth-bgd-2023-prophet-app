@@ -1,9 +1,9 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { api } from "../utils/api";
 
-import { Avatar } from "../components/Avatar";
+import { Grid } from "../components/Grid";
+import { AuctionCard } from "../components/cards/AuctionCard";
 
 const Home: NextPage = () => {
   const auctions = api.auctions.getAll.useQuery();
@@ -22,26 +22,20 @@ const Home: NextPage = () => {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Prophet
           </h1>
-          <div className="flex w-full flex-col">
-            {auctions.data?.map((auction) => (
-              <Link
+          <Grid
+            items={auctions.data || []}
+            renderItem={(auction) => (
+              <AuctionCard
                 key={auction.informationCID}
-                className="flex flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-                href="https://create.t3.gg/en/usage/first-steps"
-                target="_blank"
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-bold">
-                    {auction.information.title}
-                  </h3>
-
-                  <span>Information CID: {auction.information.CID}</span>
-                  <Avatar seed={auction.information.ownerAddress} />
-                </div>
-                <div className="text-lg">{auction.information.description}</div>
-              </Link>
-            ))}
-          </div>
+                title={auction.information.title}
+                description={auction.information.description}
+                informationCID={auction.informationCID}
+                sellerAddress={auction.information.ownerAddress}
+                sellerReputation={Math.random() * 10}
+                highestBid={Math.random() * 100}
+              />
+            )}
+          />
           <p className="text-2xl text-white">
             {auctions.data ? "" : "Loading tRPC query..."}
           </p>
