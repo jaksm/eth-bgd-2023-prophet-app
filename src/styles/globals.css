@@ -5,3 +5,7 @@
 p {
   @apply tracking-wide;
 }
+
+html {
+  @apply mt-2 scroll-smooth bg-purple-600 subpixel-antialiased;
+}

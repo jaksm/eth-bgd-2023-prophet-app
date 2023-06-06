@@ -61,7 +61,7 @@ export const Copy = ({
         type="text"
         value={children}
         readOnly
-        className="m-0 w-24 cursor-copy select-none text-ellipsis bg-transparent text-xs md:w-28 lg:w-28"
+        className="m-0 w-24 cursor-copy select-none text-ellipsis bg-transparent text-xs font-medium md:w-28 lg:w-28"
       />
 
       <button

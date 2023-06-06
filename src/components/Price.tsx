@@ -5,13 +5,14 @@ import { currency } from "./formatter";
 type PriceProps = {
   amount: number;
   className?: string;
+  precision?: number;
 };
 
-export const Price = ({ amount, className }: PriceProps) => {
+export const Price = ({ amount, className, precision = 10 }: PriceProps) => {
   return (
     <div className={classNames("flex items-center text-lg", className)}>
       <IconCurrencyEthereum size="1em" className="text-purple-200" />
-      <strong>{currency.format(amount)}</strong>
+      <strong>{currency.format(amount, precision)}</strong>
     </div>
   );
 };

@@ -1,26 +1,19 @@
-import { IconCircleDotFilled } from "@tabler/icons-react";
+import { IconDownload, IconTrash } from "@tabler/icons-react";
 import { Avatar } from "../Avatar";
 import { ButtonLink } from "../Button";
-import { Copy } from "../Copy";
-import { Price } from "../Price";
-import { Rating } from "../Rating";
 
-type AuctionProps = {
+type OwnedItemCardProps = {
   informationCID: string;
   title: string;
   description: string;
   sellerAddress: string;
-  sellerReputation: number;
-  highestBid: number;
 };
 
-export const AuctionCard = ({
+export const OwnedItemCard = ({
   title,
   description,
   sellerAddress,
-  sellerReputation,
-  highestBid = 0,
-}: AuctionProps) => {
+}: OwnedItemCardProps) => {
   return (
     <figure className="cursor-default rounded-3xl border border-white/20 bg-stone-800/20 p-4 text-white">
       <div className="flex h-full flex-col justify-between gap-16">
@@ -32,21 +25,21 @@ export const AuctionCard = ({
             </h3>
           </div>
 
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <Rating value={sellerReputation} total={139} />
-            <Copy>{sellerAddress}</Copy>
-          </div>
-
           <p className="text tracking-wide text-white/75">{description}</p>
         </section>
 
-        <section className="flex items-center justify-end">
-          <ButtonLink href="/auctions/1">
-            <Price amount={highestBid} />
+        <section className="flex items-center justify-between gap-2">
+          <ButtonLink
+            href="/auctions/1"
+            variant="text"
+            icon={<IconTrash size="1.75em" className="text-white/75" />}
+            reverse
+          >
+            Destroy
+          </ButtonLink>
 
-            <IconCircleDotFilled size="0.75em" className="mx-2 text-white/75" />
-
-            <span>Place a bid</span>
+          <ButtonLink variant="text" href="/auctions/1" icon={<IconDownload />}>
+            Download
           </ButtonLink>
         </section>
       </div>

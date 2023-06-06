@@ -12,7 +12,12 @@ const font = Roboto_Mono({
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <main className={classNames(font.className, "bg-black/95")}>
+    <main
+      className={classNames(
+        font.className,
+        "bg-black/90 bg-fixed heropattern-topography-white/10"
+      )}
+    >
       <LayoutSidebar>
         <Component {...pageProps} />
       </LayoutSidebar>

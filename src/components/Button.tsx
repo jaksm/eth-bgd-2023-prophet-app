@@ -6,7 +6,7 @@ type ButtonVariant = "text" | "filled";
 
 type ButtonLinkProps = {
   href: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   variant?: ButtonVariant;
   icon?: React.ReactNode;
   reverse?: boolean;
@@ -26,10 +26,14 @@ export const ButtonLink = ({
       href={href}
       className={classNames(
         className,
-        "flex items-center gap-4 rounded-full px-4 py-2 pr-2 text-xs font-semibold uppercase tracking-wide",
+        "flex items-center gap-4 rounded-full text-xs font-semibold uppercase tracking-wide text-white/80",
         {
-          "bg-purple-800/80 text-white/80": variant === "filled",
+          "bg-purple-800/80 heropattern-topography-white/10":
+            variant === "filled",
           "flex-row-reverse": reverse,
+          "justofy-center flex aspect-square items-center rounded-full p-2":
+            children === undefined,
+          "px-4 py-2 pr-2": children !== undefined,
         }
       )}
     >

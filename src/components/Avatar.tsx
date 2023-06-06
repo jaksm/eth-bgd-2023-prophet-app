@@ -6,10 +6,10 @@ type AvatarProps = {
   size?: "small" | "medium" | "large" | "text";
 };
 
-const SIZES = {
+export const SIZES = {
   small: 24,
   medium: 32,
-  large: 48,
+  large: 72,
   text: "1em",
 };
 

@@ -11,11 +11,11 @@ export const Rating = ({ value, total }: RatingProps) => {
     <span className="flex items-center gap-2">
       <IconStarFilled className="text-inherit text-orange-500" size="1em" />
 
-      <strong className="font-semibold">{currency.format(value)}</strong>
+      <strong className="font-semibold">{currency.format(value, 1)}</strong>
 
       {total && (
         <span className="text-white/50">
-          ({currency.format(total)}){total === 1 ? "review" : "reviews"}
+          ({currency.format(total, 0)}){total === 1 ? "review" : "reviews"}
         </span>
       )}
     </span>
