@@ -17,8 +17,7 @@ export const Avatar = ({ seed, size = "small" }: AvatarProps) => {
   const avatar = createAvatar(identicon, {
     seed,
     radius: 99999,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    size: SIZES[size]!,
+    size: SIZES[size] as any,
   });
 
   return (
