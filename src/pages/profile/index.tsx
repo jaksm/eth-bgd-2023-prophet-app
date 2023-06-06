@@ -7,8 +7,9 @@ import {
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
+import { useMetamask } from "../../MetamaskProvider";
 import { Avatar, SIZES } from "../../components/Avatar";
-import { ButtonLink } from "../../components/Button";
+import { Button, ButtonActions } from "../../components/Button";
 import { Grid } from "../../components/Grid";
 import { AuctionListCard } from "../../components/cards/AuctionListCard";
 import { OwnedItemCard } from "../../components/cards/OwnedItemCard";
@@ -18,6 +19,7 @@ import { LayoutSidebar } from "../../components/layouts/LayoutSidebar";
 import { api } from "../../utils/api";
 
 const Sell: NextPage = () => {
+  const metamask = useMetamask();
   const auctions = api.auctions.getAll.useQuery();
   const [createAuctionDialog, setCreateAuctionDialog] = useState(false);
 
@@ -38,7 +40,7 @@ const Sell: NextPage = () => {
           <div className="container mx-auto flex flex-col gap-12 px-4">
             <div className="grid grid-cols-3 gap-12">
               <section className="flex items-start gap-4 py-8">
-                <Avatar size="large" seed="asdasd" />
+                <Avatar size="large" seed={metamask?.account || ""} />
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col justify-center gap-2">
                     <span className="text-white/60">Current balance</span>
@@ -54,15 +56,15 @@ const Sell: NextPage = () => {
                     </div>
                   </div>
 
-                  <ButtonLink
-                    href="/sell"
+                  <Button
                     variant="text"
                     className="bg-black"
                     icon={<IconClipboard />}
                     reverse
+                    onClick={() => ButtonActions.copy(metamask?.account || "")}
                   >
-                    Copy address
-                  </ButtonLink>
+                    Account {metamask?.account?.slice(0, 8)}...
+                  </Button>
                 </div>
               </section>
 
