@@ -8,6 +8,8 @@ import { AuctionCard } from "../components/cards/AuctionCard";
 import { AuctionListCard } from "../components/cards/AuctionListCard";
 import { useSearchAuctions } from "../hooks/useSearch";
 
+import { AnimatePresence, motion } from "framer-motion";
+
 const Home: NextPage = () => {
   const auctions = api.auctions.getAll.useQuery();
 
@@ -24,25 +26,33 @@ const Home: NextPage = () => {
         <div className="container mx-auto flex flex-col justify-center gap-12 px-4">
           <Search onChange={search.setValue} />
 
-          {search.results?.length > 0 && (
-            <div className="flex flex-col gap-12 pb-12">
-              <h2 className="text-3xl font-semibold tracking-wide text-white">
-                🔍 Found {search.results.length} auctions
-              </h2>
+          <AnimatePresence>
+            {search.results?.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col gap-12 pb-12"
+              >
+                <h2 className="text-3xl font-semibold tracking-wide text-white">
+                  🔍 Found {search.results.length} auctions
+                </h2>
 
-              <div className="flex flex-col gap-4">
-                {(search.results || []).map((auction) => (
-                  <AuctionListCard
-                    key={auction.informationCID}
-                    title={auction.information.title}
-                    description={auction.information.description}
-                    informationCID={auction.informationCID}
-                    highestBid={Math.random() * 100}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
+                <motion.div className="flex flex-col gap-4">
+                  {(search.results || []).map((auction) => (
+                    <motion.div key={auction.informationCID}>
+                      <AuctionListCard
+                        title={auction.information.title}
+                        description={auction.information.description}
+                        informationCID={auction.informationCID}
+                        highestBid={Math.random() * 100}
+                      />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <h1 className="text-3xl font-semibold tracking-wide text-white">
             🔥 Available for bidding
