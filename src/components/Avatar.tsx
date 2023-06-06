@@ -3,20 +3,22 @@ import { createAvatar } from "@dicebear/core";
 
 type AvatarProps = {
   seed: string;
-  size?: "small" | "medium" | "large";
+  size?: "small" | "medium" | "large" | "text";
 };
 
 const SIZES = {
   small: 24,
   medium: 32,
   large: 48,
+  text: "1em",
 };
 
 export const Avatar = ({ seed, size = "small" }: AvatarProps) => {
   const avatar = createAvatar(identicon, {
     seed,
-    radius: SIZES[size] * 2,
-    size: SIZES[size],
+    radius: 99999,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    size: SIZES[size]!,
   });
 
   return (

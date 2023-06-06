@@ -2,9 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["native", "linux-musl"]
-  previewFeatures = ["clientExtensions"]
+    provider        = "prisma-client-js"
+    binaryTargets   = ["native", "linux-musl"]
+    previewFeatures = ["clientExtensions", "fullTextSearch"]
 }
 
 datasource db {
@@ -13,10 +13,10 @@ datasource db {
 }
 
 model User {
-    walletAddress String @id
-    seller Seller?
+    walletAddress String  @id
+    seller        Seller?
 
-    buyer Buyer?
+    buyer        Buyer?
     informations Information[]
 }
 
@@ -24,9 +24,9 @@ model Seller {
     user User @relation(fields: [walletAddress], references: [walletAddress])
 
     walletAddress String @id
-    
+
     reputation Int @default(0)
-    
+
     transactions Transaction[]
 }
 
@@ -34,7 +34,7 @@ model Buyer {
     user User @relation(fields: [walletAddress], references: [walletAddress])
 
     walletAddress String @id
-    
+
     transactions Transaction[]
 
     bids Bid[]
@@ -44,11 +44,11 @@ model Bid {
     id Int @id @default(autoincrement())
 
     amount Int
-    
-    transaction Transaction @relation(fields: [informationCID], references: [informationCID])
+
+    transaction    Transaction @relation(fields: [informationCID], references: [informationCID])
     informationCID String
-    
-    buyer Buyer @relation(fields: [buyerAddress], references: [walletAddress])
+
+    buyer        Buyer  @relation(fields: [buyerAddress], references: [walletAddress])
     buyerAddress String
 
     createdAt DateTime @default(now())
@@ -60,34 +60,34 @@ enum TransactionType {
 }
 
 model Transaction {
-    informationCID String @id
-    information Information @relation(fields: [informationCID], references: [CID])
-    
+    informationCID String      @id
+    information    Information @relation(fields: [informationCID], references: [CID])
+
     type TransactionType @default(BID)
-    
+
     sellerAddress String
-    seller Seller @relation(fields: [sellerAddress], references: [walletAddress])
-    
+    seller        Seller @relation(fields: [sellerAddress], references: [walletAddress])
+
     buyerAddress String?
-    buyer Buyer? @relation(fields: [buyerAddress], references: [walletAddress])
-    
+    buyer        Buyer?  @relation(fields: [buyerAddress], references: [walletAddress])
+
     bids Bid[]
 
-    createdAt DateTime @default(now())
+    createdAt DateTime  @default(now())
     expiresAt DateTime? // when it becomes public and non tradable
-    closedAt DateTime? // when it becomes public and non tradable
+    closedAt  DateTime? // when it becomes public and non tradable
 }
 
 model Information {
-    CID String @id
-    title String
+    CID         String @id
+    title       String
     description String
 
     ownerAddress String
-    owner User @relation(fields: [ownerAddress], references: [walletAddress])
+    owner        User   @relation(fields: [ownerAddress], references: [walletAddress])
 
     Transaction Transaction?
 
-    createdAt DateTime @default(now())
+    createdAt DateTime  @default(now())
     expiresAt DateTime? // when it becomes public and non tradable
 }

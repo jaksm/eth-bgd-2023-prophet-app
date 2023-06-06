@@ -9,5 +9,5 @@ export default {
     },
     extend: {},
   },
-  plugins: [],
+  plugins: [require("tailwindcss-hero-patterns")],
 } satisfies Config;

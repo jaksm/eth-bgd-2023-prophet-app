@@ -6,11 +6,16 @@ import { useEffect, useState } from "react";
 type CopyProps = {
   resetAfter?: number;
   children: string;
+  className?: string;
 };
 
 type State = "idle" | "copying" | "copied" | "error";
 
-export const Copy = ({ children, resetAfter = 1000 * 0.5 }: CopyProps) => {
+export const Copy = ({
+  children,
+  resetAfter = 1000 * 0.5,
+  className,
+}: CopyProps) => {
   const [state, setState] = useState<State>("idle");
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -45,6 +50,7 @@ export const Copy = ({ children, resetAfter = 1000 * 0.5 }: CopyProps) => {
     <div
       className={classNames(
         "flex cursor-copy items-center gap-1  rounded-md border px-2 py-1 font-mono",
+        className,
         {
           "border-orange-500/50 text-orange-500": state === "idle",
           "border-green-600/50 text-green-600": state === "copied",

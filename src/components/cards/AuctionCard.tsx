@@ -22,7 +22,7 @@ export const AuctionCard = ({
   highestBid = 0,
 }: AuctionProps) => {
   return (
-    <figure className="cursor-default rounded-xl border border-white/10 bg-white/5 p-4 text-white">
+    <figure className="cursor-default rounded-3xl border border-white/20 bg-stone-800/5 p-4 text-white">
       <div className="flex h-full flex-col justify-between gap-16">
         <section className="flex flex-col gap-4">
           <div className="flex items-center gap-4 ">
@@ -35,7 +35,7 @@ export const AuctionCard = ({
             <Copy>{sellerAddress}</Copy>
           </div>
 
-          <p className="text text-white/75">{description}</p>
+          <p className="text tracking-wide text-white/75">{description}</p>
         </section>
 
         <section className="flex items-center justify-end">

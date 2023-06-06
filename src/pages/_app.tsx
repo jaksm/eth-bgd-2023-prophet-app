@@ -2,7 +2,9 @@ import { type AppType } from "next/app";
 import "../styles/globals.css";
 import { api } from "../utils/api";
 
+import classNames from "classnames";
 import { Roboto_Mono } from "next/font/google";
+import { LayoutSidebar } from "../components/layouts/LayoutSidebar";
 
 const font = Roboto_Mono({
   subsets: ["latin", "cyrillic", "cyrillic-ext", "greek", "latin-ext"],
@@ -10,8 +12,10 @@ const font = Roboto_Mono({
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <main className={font.className}>
-      <Component {...pageProps} />
+    <main className={classNames(font.className, "bg-black/95")}>
+      <LayoutSidebar>
+        <Component {...pageProps} />
+      </LayoutSidebar>
     </main>
   );
 };

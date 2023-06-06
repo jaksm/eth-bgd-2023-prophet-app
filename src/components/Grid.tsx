@@ -16,7 +16,7 @@ export function Grid<T extends object>({
             return (
               <div
                 key={index}
-                className="min-h-96 aspect-square w-full [&>*]:h-full [&>*]:w-full"
+                className="min-h-[400px] w-full [&>*]:h-full [&>*]:w-full"
               >
                 {renderItem(item, index)}
               </div>
