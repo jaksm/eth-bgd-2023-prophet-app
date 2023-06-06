@@ -17,8 +17,6 @@ export function CreateAuctionDialog({
   const [privKey, setPrivKey] = useState("");
   const [passphrase, setPassphrase] = useState("");
 
-  console.log("PUB", pubKey);
-
   return (
     <Dialog open={isOpen} onClose={() => onClose(false)}>
       <Dialog.Backdrop

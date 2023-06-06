@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from "react";
 
-const provider =
+export const provider =
   typeof window !== "undefined"
     ? new ethers.BrowserProvider((window as any).ethereum)
     : null;
@@ -75,13 +75,14 @@ const MetamaskProvider = ({ children }: { children: ReactNode }) => {
         });
 
         setAccount(accounts[0]);
+        router.push("/");
       } catch (err) {
         setError(err.message);
       }
     }
 
     setIsLoading(false);
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (checkEthereumExists()) {
@@ -99,11 +100,6 @@ const MetamaskProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!account && !router.pathname.includes("/connect-wallet")) {
       router.push("/connect-wallet");
-      return;
-    }
-
-    if (account && router.pathname.includes("/connect-wallet")) {
-      router.push("/profile");
       return;
     }
   }, [account, router]);

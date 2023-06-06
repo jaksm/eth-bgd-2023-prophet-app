@@ -9,12 +9,23 @@ import { AuctionListCard } from "../components/cards/AuctionListCard";
 import { useSearchAuctions } from "../hooks/useSearch";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
 import { LayoutSidebar } from "../components/layouts/LayoutSidebar";
+import { useFeed } from "../hooks/usePagination";
 
 const Home: NextPage = () => {
   const auctions = api.auctions.getAll.useQuery();
 
   const search = useSearchAuctions();
+
+  const feed = useFeed();
+
+  useEffect(() => {
+    feed.next();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // console.log("data", JSON.stringify(feed.data, null, 2));
 
   return (
     <>

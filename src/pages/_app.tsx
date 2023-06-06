@@ -4,6 +4,7 @@ import { api } from "../utils/api";
 
 import classNames from "classnames";
 import { Roboto_Mono } from "next/font/google";
+import { ContractProvider } from "../context/ContractProvider";
 import MetamaskProvider from "../context/MetamaskProvider";
 
 const font = Roboto_Mono({
@@ -13,14 +14,16 @@ const font = Roboto_Mono({
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <MetamaskProvider>
-      <main
-        className={classNames(
-          font.className,
-          "bg-black/90 bg-fixed heropattern-topography-white/10"
-        )}
-      >
-        <Component {...pageProps} />
-      </main>
+      <ContractProvider>
+        <main
+          className={classNames(
+            font.className,
+            "bg-black/90 bg-fixed heropattern-topography-white/10"
+          )}
+        >
+          <Component {...pageProps} />
+        </main>
+      </ContractProvider>
     </MetamaskProvider>
   );
 };

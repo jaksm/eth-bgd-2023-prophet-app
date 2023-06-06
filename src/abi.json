@@ -1,0 +1,132 @@
+[
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_addr", "type": "address" },
+      { "internalType": "uint256", "name": "_score", "type": "uint256" }
+    ],
+    "name": "addReview",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "dealId", "type": "uint256" },
+      { "internalType": "uint256", "name": "bidAmount", "type": "uint256" }
+    ],
+    "name": "bid",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "dealId", "type": "uint256" }
+    ],
+    "name": "closeBidding",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "collectFunds",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "dealId", "type": "uint256" }
+    ],
+    "name": "confirmPayment",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "string", "name": "_hash", "type": "string" },
+      { "internalType": "string", "name": "_dscHash", "type": "string" }
+    ],
+    "name": "createDeal",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "dealIndex",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "deals",
+    "outputs": [
+      {
+        "internalType": "address payable",
+        "name": "seller",
+        "type": "address"
+      },
+      { "internalType": "uint256", "name": "highestBid", "type": "uint256" },
+      {
+        "internalType": "address payable",
+        "name": "highestBidder",
+        "type": "address"
+      },
+      {
+        "internalType": "enum Auction.DealStatus",
+        "name": "status",
+        "type": "uint8"
+      },
+      { "internalType": "string", "name": "hash", "type": "string" },
+      { "internalType": "string", "name": "dscHash", "type": "string" },
+      { "internalType": "string", "name": "cid", "type": "string" },
+      { "internalType": "uint256", "name": "endBlock", "type": "uint256" },
+      { "internalType": "uint256", "name": "payWindow", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "dealId", "type": "uint256" }
+    ],
+    "name": "defaultOnPayment",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      { "internalType": "address payable", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "scores",
+    "outputs": [
+      { "internalType": "uint256", "name": "score", "type": "uint256" },
+      { "internalType": "uint256", "name": "reviewNum", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "dealId", "type": "uint256" },
+      { "internalType": "string", "name": "cid", "type": "string" }
+    ],
+    "name": "submitCID",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
