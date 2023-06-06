@@ -39,34 +39,38 @@ const Sell: NextPage = () => {
 
           <div className="container mx-auto flex flex-col gap-12 px-4">
             <div className="grid grid-cols-3 gap-12">
-              <section className="flex items-start gap-4 py-8">
-                <Avatar size="large" seed={metamask?.account || ""} />
-                <div className="flex flex-col gap-4">
-                  <div className="flex flex-col justify-center gap-2">
-                    <span className="text-white/60">Current balance</span>
+              {metamask?.account && (
+                <section className="flex items-start gap-4 py-8">
+                  <Avatar size="large" seed={metamask?.account || ""} />
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-col justify-center gap-2">
+                      <span className="text-white/60">Current balance</span>
 
-                    <div className="flex items-center gap-2">
-                      <IconCurrencyEthereum
-                        size="36px"
-                        className="text-white"
-                      />
-                      <h1 className="text-4xl font-bold text-white">
-                        {metamask?.} ETH
-                      </h1>
+                      <div className="flex items-center gap-2">
+                        <IconCurrencyEthereum
+                          size="36px"
+                          className="text-white"
+                        />
+                        <h1 className="text-4xl font-bold text-white">
+                          {metamask?.balance} ETH
+                        </h1>
+                      </div>
                     </div>
-                  </div>
 
-                  <Button
-                    variant="text"
-                    className="bg-black"
-                    icon={<IconClipboard />}
-                    reverse
-                    onClick={() => ButtonActions.copy(metamask?.account || "")}
-                  >
-                    Account {metamask?.account?.slice(0, 8)}...
-                  </Button>
-                </div>
-              </section>
+                    <Button
+                      variant="text"
+                      className="bg-black"
+                      icon={<IconClipboard />}
+                      reverse
+                      onClick={() =>
+                        ButtonActions.copy(metamask?.account || "")
+                      }
+                    >
+                      Account {metamask?.account?.slice(0, 8)}...
+                    </Button>
+                  </div>
+                </section>
+              )}
 
               <section className="flex items-start gap-4 py-8">
                 <IconShieldBolt
