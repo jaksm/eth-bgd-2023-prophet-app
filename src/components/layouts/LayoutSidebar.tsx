@@ -1,9 +1,4 @@
-import {
-  IconFlame,
-  IconLogout,
-  IconSettings,
-  IconUserBolt,
-} from "@tabler/icons-react";
+import { IconFlame, IconUserBolt } from "@tabler/icons-react";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { ButtonLink } from "../Button";
@@ -81,7 +76,7 @@ const Sidebar = () => {
         </ul>
 
         <ul className="m-0 flex flex-col items-start justify-center">
-          <SidebarLink
+          {/* <SidebarLink
             icon={<IconSettings size="2em" className="text-inherit" />}
             isActive={isActive("/settings")}
             href="/settings"
@@ -95,7 +90,7 @@ const Sidebar = () => {
             icon={<IconLogout size="2em" className="text-inherit" />}
           >
             Logout
-          </SidebarLink>
+          </SidebarLink> */}
         </ul>
       </nav>
     </aside>
@@ -108,7 +103,7 @@ export const LayoutSidebar = ({ children }: LayoutSidebarProps) => {
       <div className="flex">
         <Sidebar />
         <div className="w-64"></div>
-        <div className="flex flex-grow flex-col overflow-hidden bg-black px-6 py-10">
+        <div className="flex flex-grow flex-col overflow-hidden bg-black px-6 pb-32 pt-10">
           {children}
         </div>
       </div>
