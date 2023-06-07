@@ -1,18 +1,18 @@
+import { formatEther } from "@ethersproject/units";
 import { IconCurrencyEthereum } from "@tabler/icons-react";
 import classNames from "classnames";
-import { currency } from "./formatter";
+import { BigNumber } from "ethers";
 
 type PriceProps = {
-  amount: number;
+  amount?: BigNumber;
   className?: string;
-  precision?: number;
 };
 
-export const Price = ({ amount, className, precision = 10 }: PriceProps) => {
+export const Price = ({ amount, className }: PriceProps) => {
   return (
     <div className={classNames("flex items-center text-lg", className)}>
       <IconCurrencyEthereum size="1em" className="text-purple-200" />
-      <strong>{currency.format(amount, precision)}</strong>
+      <strong>{formatEther(amount || 0)}</strong>
     </div>
   );
 };

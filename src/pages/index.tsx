@@ -7,17 +7,14 @@ import { Search } from "../components/Search";
 import { useSearchAuctions } from "../hooks/useSearch";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { AuctionCard } from "../components/cards/AuctionCard";
+import { AuctionListCard } from "../components/cards/AuctionListCard";
 import { LayoutSidebar } from "../components/layouts/LayoutSidebar";
-import { useContract } from "../hooks/usePagination";
 
 const Home: NextPage = () => {
   const auctions = api.auctions.getAll.useQuery();
 
   const search = useSearchAuctions();
-
-  const feed = useContract();
-
-  // console.log("data", JSON.stringify(feed.data, null, 2));
 
   return (
     <>
@@ -44,16 +41,17 @@ const Home: NextPage = () => {
                   </h2>
 
                   <motion.div className="flex flex-col gap-4">
-                    {/* {(search.results || []).map((auction) => (
-                      <motion.div key={auction.informationCID}>
+                    {(search.results || []).map((auction, i) => (
+                      <motion.div key={i}>
                         <AuctionListCard
+                          index={i}
                           title={auction.information.title}
                           description={auction.information.description}
-                          informationCID={auction.informationCID}
-                          highestBid={Math.random() * 100}
+                          totalBids={auction.bids.length}
+                          createdAt={auction.createdAt}
                         />
                       </motion.div>
-                    ))} */}
+                    ))}
                   </motion.div>
                 </motion.div>
               )}
@@ -65,18 +63,14 @@ const Home: NextPage = () => {
 
             <Grid
               items={auctions.data || []}
-              renderItem={
-                (auction) => null
-                // <AuctionCard
-                //   key={auction.informationCID}
-                //   title={auction.information.title}
-                //   description={auction.information.description}
-                //   informationCID={auction.informationCID}
-                //   sellerAddress={auction.information.ownerAddress}
-                //   sellerReputation={Math.random() * 10}
-                //   highestBid={Math.random() * 100}
-                // />
-              }
+              renderItem={(auction, i) => (
+                <AuctionCard
+                  index={i}
+                  key={i}
+                  title={auction.information.title}
+                  description={auction.information.description}
+                />
+              )}
             />
             <p className="text-2xl text-white">
               {auctions.data ? "" : "Loading tRPC query..."}

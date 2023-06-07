@@ -1,7 +1,7 @@
 import { Dialog } from "@headlessui/react";
-import { useEthers } from "@usedapp/core";
+import { useContractFunction, useEthers } from "@usedapp/core";
 import { useState } from "react";
-import { useContract } from "../../hooks/usePagination";
+import { useSignedContract } from "../../hooks/useSIgnedContract";
 import { api } from "../../utils/api";
 
 type CreateAuctionDialogProps = {
@@ -23,7 +23,10 @@ export function CreateAuctionDialog({
   onChange: onClose,
 }: CreateAuctionDialogProps) {
   const { account: sellerAddress } = useEthers();
-  const contract = useContract();
+  const { contract } = useSignedContract();
+  const createDeal = useContractFunction(contract, "createDeal", {
+    transactionName: "Wrap",
+  });
 
   const auctionSaveMutation = api.auctions.save.useMutation();
   const updateWalletMutation = api.users.updateAddress.useMutation();
@@ -40,7 +43,7 @@ export function CreateAuctionDialog({
       const titleHash = await hash(title);
       const descriptionHash = await hash(description);
 
-      await contract.createDeal.send(titleHash, descriptionHash);
+      await createDeal.send(titleHash, descriptionHash);
       await updateWalletMutation.mutateAsync({
         address: sellerAddress,
       });

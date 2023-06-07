@@ -14,13 +14,13 @@ export const auctionRouter = createTRPCRouter({
       include: {
         information: true,
         seller: true,
+        bids: true,
       },
     });
   }),
   searchByTitle: publicProcedure
     .input(z.string().nonempty("Search value cannot be empty"))
     .query(({ ctx, input }) => {
-      console.log(input);
       return ctx.prisma.transaction.findMany({
         where: {
           information: {
@@ -36,6 +36,7 @@ export const auctionRouter = createTRPCRouter({
           information: true,
           seller: true,
           _count: true,
+          bids: true,
         },
       });
     }),
@@ -49,14 +50,55 @@ export const auctionRouter = createTRPCRouter({
       })
     )
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.information.create({
-        data: {
-          title: input.title,
-          description: input.description,
-          CID: "",
-          owner: {
-            connect: {
-              walletAddress: input.sellerAddress,
+      return ctx.prisma.user.upsert({
+        where: {
+          walletAddress: input.sellerAddress,
+        },
+        update: {
+          walletAddress: input.sellerAddress,
+          seller: {
+            create: {
+              reputation: 0,
+              transactions: {
+                create: {
+                  information: {
+                    create: {
+                      title: input.title,
+                      description: input.description,
+                      CID: "",
+                      owner: {
+                        connect: {
+                          walletAddress: input.sellerAddress,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        create: {
+          walletAddress: input.sellerAddress,
+          seller: {
+            create: {
+              reputation: 0,
+              transactions: {
+                create: {
+                  information: {
+                    create: {
+                      title: input.title,
+                      description: input.description,
+                      CID: "",
+                      owner: {
+                        connect: {
+                          walletAddress: input.sellerAddress,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },

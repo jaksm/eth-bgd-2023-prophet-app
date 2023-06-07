@@ -135,10 +135,10 @@ const Sell: NextPage = () => {
               {(auctions.data || []).map((auction, i) => (
                 <div key={i}>
                   <AuctionListCard
+                    index={i}
                     title={auction.information.title}
-                    informationCID={auction.informationCID}
                     description={auction.information.description}
-                    highestBid={0}
+                    createdAt={auction.createdAt}
                   />
                 </div>
               ))}
