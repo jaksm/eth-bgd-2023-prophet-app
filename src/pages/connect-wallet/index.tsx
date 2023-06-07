@@ -1,9 +1,9 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { useMetamask } from "../../context/MetamaskProvider";
+import { useWallet } from "../../context/AuthProvider";
 
 const ConnectWallet: NextPage = () => {
-  const metamask = useMetamask();
+  const { connect } = useWallet();
 
   return (
     <>
@@ -19,7 +19,7 @@ const ConnectWallet: NextPage = () => {
           </h1>
 
           <button
-            onClick={metamask?.connectWallet}
+            onClick={() => connect()}
             className="flex items-center gap-4 rounded-xl bg-purple-500 px-8 py-4 font-semibold text-white heropattern-topography-white/10 hover:bg-purple-600"
           >
             <span className="text-xl">🦊</span>

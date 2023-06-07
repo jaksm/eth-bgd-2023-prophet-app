@@ -1,7 +1,13 @@
+import { Contract } from "@ethersproject/contracts";
+import { useContractFunction, useEthers, useSigner } from "@usedapp/core";
+import { utils } from "ethers";
 import { useState } from "react";
-import { useContract } from "../context/ContractProvider";
+import { type Abi } from "../../gen/types";
+import WethAbi from "../abi.json";
 
-export const useFeed = () => {
+const wethInterface = new utils.Interface(WethAbi);
+
+export const useContract = () => {
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
 
@@ -9,21 +15,19 @@ export const useFeed = () => {
   const [take, setTake] = useState(10);
   const [skip, setSkip] = useState(0);
 
-  const contract = useContract();
+  const { account } = useEthers();
+  const signer = useSigner();
+  const contract = new Contract(
+    "0x9a03375f1f4E18AcF009005771A3ECc67Fe4D456",
+    wethInterface,
+    signer
+  ) as Abi;
 
-  const next = async () => {
-    const data = await Promise.all(
-      Array.from({ length: take }, (_, i) => i + skip).map((i) => {
-        return contract?.getDeal?.(i);
-      })
-    );
-
-    console.log("data", data);
-    // setData(data.map((d) => d));
-  };
+  const createDeal = useContractFunction(contract, "createDeal", {
+    transactionName: "Wrap",
+  });
 
   return {
-    next,
-    data,
+    createDeal,
   };
 };

@@ -39,4 +39,27 @@ export const auctionRouter = createTRPCRouter({
         },
       });
     }),
+  save: publicProcedure
+    .input(
+      z.object({
+        title: z.string().nonempty("Title cannot be empty"),
+        description: z.string().nonempty("Description cannot be empty"),
+        sellerAddress: z.string().nonempty("Seller address cannot be empty"),
+        cid: z.string().default("GEN_CID"),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.information.create({
+        data: {
+          title: input.title,
+          description: input.description,
+          CID: "",
+          owner: {
+            connect: {
+              walletAddress: input.sellerAddress,
+            },
+          },
+        },
+      });
+    }),
 });

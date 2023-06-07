@@ -1,9 +1,11 @@
+import { formatEther } from "@ethersproject/units";
 import {
   IconClipboard,
   IconCurrencyEthereum,
   IconPlus,
   IconShieldBolt,
 } from "@tabler/icons-react";
+import { useEtherBalance, useEthers } from "@usedapp/core";
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
@@ -15,11 +17,12 @@ import { OwnedItemCard } from "../../components/cards/OwnedItemCard";
 import { CreateAuctionDialog } from "../../components/dialogs/CreateAuctionDialog";
 import { currency } from "../../components/formatter";
 import { LayoutSidebar } from "../../components/layouts/LayoutSidebar";
-import { useMetamask } from "../../context/MetamaskProvider";
 import { api } from "../../utils/api";
 
 const Sell: NextPage = () => {
-  const metamask = useMetamask();
+  const { isLoading, account } = useEthers();
+  const etherBalance = useEtherBalance(account);
+
   const auctions = api.auctions.getAll.useQuery();
   const [createAuctionDialog, setCreateAuctionDialog] = useState(false);
 
@@ -39,9 +42,9 @@ const Sell: NextPage = () => {
 
           <div className="container mx-auto flex flex-col gap-12 px-4">
             <div className="grid grid-cols-3 gap-12">
-              {metamask?.account && (
-                <section className="flex items-start gap-4 py-8">
-                  <Avatar size="large" seed={metamask?.account || ""} />
+              {!isLoading && (
+                <section className="col-span-2 flex items-start gap-4 py-8">
+                  <Avatar size="large" seed={account || ""} />
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-col justify-center gap-2">
                       <span className="text-white/60">Current balance</span>
@@ -52,7 +55,7 @@ const Sell: NextPage = () => {
                           className="text-white"
                         />
                         <h1 className="text-4xl font-bold text-white">
-                          {metamask?.balance} ETH
+                          {formatEther(etherBalance || 0)} ETH
                         </h1>
                       </div>
                     </div>
@@ -62,11 +65,9 @@ const Sell: NextPage = () => {
                       className="bg-black"
                       icon={<IconClipboard />}
                       reverse
-                      onClick={() =>
-                        ButtonActions.copy(metamask?.account || "")
-                      }
+                      onClick={() => ButtonActions.copy(account || "")}
                     >
-                      Account {metamask?.account?.slice(0, 8)}...
+                      Account {account?.slice(0, 8)}...
                     </Button>
                   </div>
                 </section>
