@@ -6,22 +6,14 @@ import { api } from "../../utils/api";
 
 type CreateAuctionDialogProps = {
   isOpen: boolean;
-  onClose: () => void;
+  onChange: (value: boolean) => void;
 };
 
-const hash = (val: string) =>
-  crypto.subtle.digest("SHA-256", new TextEncoder().encode(val)).then((h) => {
-    const hexes: any[] = [];
-    const view = new DataView(h);
-
-    for (let i = 0; i < view.byteLength; i += 4)
-      hexes.push(("00000000" + view.getUint32(i).toString(16)).slice(-8));
-    return hexes.join("");
-  });
+const hash = (val: string) => "";
 
 export function CreateAuctionDialog({
   isOpen,
-  onClose,
+  onChange: onClose,
 }: CreateAuctionDialogProps) {
   const { account: sellerAddress } = useEthers();
   const { contract } = useSignedContract();
@@ -29,8 +21,8 @@ export function CreateAuctionDialog({
     transactionName: "Wrap",
   });
 
-  const auctionsQuery = api.auctions.getAll.useQuery();
   const auctionSaveMutation = api.auctions.save.useMutation();
+  const updateWalletMutation = api.users.updateAddress.useMutation();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -44,28 +36,26 @@ export function CreateAuctionDialog({
       const titleHash = await hash(title);
       const descriptionHash = await hash(description);
 
-      const receipt = await createDeal.send(titleHash, descriptionHash);
-      if (receipt) {
-        await auctionSaveMutation.mutateAsync({
-          transactionId: receipt.transactionHash,
-          title,
-          description,
-          sellerAddress,
-          cid: titleHash,
-        });
-        await auctionsQuery.refetch();
-      }
+      await createDeal.send(titleHash, descriptionHash);
+      await updateWalletMutation.mutateAsync({
+        address: sellerAddress,
+      });
+      await auctionSaveMutation.mutateAsync({
+        title,
+        description,
+        sellerAddress,
+      });
 
-      onClose();
+      alert("Saved");
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <Dialog open={isOpen} onClose={() => onClose()}>
+    <Dialog open={isOpen} onClose={() => onClose(false)}>
       <Dialog.Backdrop
-        onClick={() => onClose()}
+        onClick={() => onClose(false)}
         className="fixed bottom-0 left-0 right-0 top-0 z-50 flex items-center justify-center bg-gray-500/60"
       >
         <Dialog.Panel className="flex flex-col gap-8 rounded-3xl bg-black px-6 py-4 text-white">
@@ -137,14 +127,9 @@ export function CreateAuctionDialog({
 
             <button
               onClick={onSave}
-              disabled={createDeal.state.status === "Mining"}
               className="rounded-full bg-purple-500 py-3 heropattern-topography-white/10"
             >
-              {createDeal.state.status === "Success" && "Created Auction"}
-              {createDeal.state.status === "Mining" && "Mining..."}
-              {createDeal.state.status === "Fail" && "Failed"}
-              {createDeal.state.status === "PendingSignature" && "Sign"}
-              {createDeal.state.status === "None" && "Create Auction"}
+              Create
             </button>
           </div>
         </Dialog.Panel>

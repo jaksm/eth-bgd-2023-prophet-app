@@ -1,9 +1,9 @@
 import { IconCircleDotFilled } from "@tabler/icons-react";
 import { useCall } from "@usedapp/core";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { useSignedContract } from "../../hooks/useSIgnedContract";
 import { Avatar } from "../Avatar";
-import { ButtonLink } from "../Button";
+import { Button } from "../Button";
 import { Copy } from "../Copy";
 import { Price } from "../Price";
 import { Rating } from "../Rating";
@@ -15,8 +15,10 @@ type AuctionProps = {
   sellerReputation?: number;
 };
 
+// eslint-disable-next-line react/display-name
 export const AuctionCard = memo(
   ({ index, title, description, sellerReputation = 5 }: AuctionProps) => {
+    const [placeBidModalVisible, setPlaceBidModalVisible] = useState(false);
     const { contract } = useSignedContract();
     const { value, error } =
       useCall({
@@ -45,7 +47,7 @@ export const AuctionCard = memo(
           </section>
 
           <section className="flex items-center justify-end">
-            <ButtonLink href="/auctions/1">
+            <Button onClick={() => setPlaceBidModalVisible(true)}>
               <Price amount={value?.highestBid} />
 
               <IconCircleDotFilled
@@ -54,7 +56,7 @@ export const AuctionCard = memo(
               />
 
               <span>Place a bid</span>
-            </ButtonLink>
+            </Button>
           </section>
         </div>
       </figure>

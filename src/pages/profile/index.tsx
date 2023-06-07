@@ -37,7 +37,7 @@ const Sell: NextPage = () => {
         <main className="flex min-h-screen w-full flex-col justify-center">
           <CreateAuctionDialog
             isOpen={createAuctionDialog}
-            onChange={setCreateAuctionDialog}
+            onClose={() => setCreateAuctionDialog(false)}
           />
 
           <div className="container mx-auto flex flex-col gap-12 px-4">

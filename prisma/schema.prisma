@@ -41,11 +41,11 @@ model Buyer {
 }
 
 model Bid {
-    id Int @id @default(autoincrement())
+    id String @id @default(cuid())
 
     amount Int
 
-    transaction    Transaction @relation(fields: [informationCID], references: [informationCID])
+    transaction    Transaction @relation(fields: [id], references: [id])
     informationCID String
 
     buyer        Buyer  @relation(fields: [buyerAddress], references: [walletAddress])
@@ -60,8 +60,9 @@ enum TransactionType {
 }
 
 model Transaction {
-    informationCID String      @id
-    information    Information @relation(fields: [informationCID], references: [CID])
+    id             String      @id @default(cuid())
+    informationCID String
+    information    Information @relation(fields: [id], references: [id])
 
     type TransactionType @default(BID)
 
@@ -79,7 +80,8 @@ model Transaction {
 }
 
 model Information {
-    CID         String @id
+    id          String  @id
+    CID         String?
     title       String
     description String
 

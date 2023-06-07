@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Information" ALTER COLUMN "CID" DROP NOT NULL;
