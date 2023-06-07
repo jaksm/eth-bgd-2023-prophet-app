@@ -1,5 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import { useContractFunction, useEthers } from "@usedapp/core";
+import { utils } from "ethers";
 import { useState } from "react";
 import { useSignedContract } from "../../hooks/useSIgnedContract";
 import { api } from "../../utils/api";
@@ -26,7 +27,7 @@ export function CreateAuctionDialog({
   const { account: sellerAddress } = useEthers();
   const { contract } = useSignedContract();
   const createDeal = useContractFunction(contract, "createDeal", {
-    transactionName: "Wrap",
+    transactionName: "auction/create",
   });
 
   const auctionsQuery = api.auctions.getAll.useQuery();
@@ -34,6 +35,7 @@ export function CreateAuctionDialog({
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [startPrice, setStartPrice] = useState("");
 
   const onSave = async () => {
     try {
@@ -44,10 +46,15 @@ export function CreateAuctionDialog({
       const titleHash = await hash(title);
       const descriptionHash = await hash(description);
 
-      const receipt = await createDeal.send(titleHash, descriptionHash);
+      const receipt = await createDeal.send(
+        titleHash,
+        descriptionHash,
+        utils.parseEther(startPrice)
+      );
+
       if (receipt) {
         await auctionSaveMutation.mutateAsync({
-          transactionId: receipt.transactionHash,
+          transactionId: titleHash,
           title,
           description,
           sellerAddress,
@@ -88,6 +95,8 @@ export function CreateAuctionDialog({
                   type="number"
                   placeholder="Starting price"
                   className="rounded-2xl border border-purple-500 bg-black p-4 text-sm text-white"
+                  value={startPrice}
+                  onChange={(e) => setStartPrice(e.target.value)}
                 />
 
                 <textarea
@@ -100,40 +109,6 @@ export function CreateAuctionDialog({
                 />
               </div>
             </div>
-
-            {/* <div className="flex flex-col gap-4">
-              <h3>Encryption</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="Passphrase"
-                  className="col-span-2 rounded-2xl border border-purple-500 bg-black p-4 text-sm text-white"
-                  onChange={(e) => setPassphrase(e.target.value)}
-                />
-
-                <ReadFile
-                  onChange={setPrivKey}
-                  placeholder="Private key"
-                  icon={
-                    <IconLockAccessOff size="1.5em" className="text-white" />
-                  }
-                />
-
-                <ReadFile
-                  onChange={setPubKey}
-                  placeholder="Public key"
-                  icon={<IconLockAccess size="1.5em" className="text-white" />}
-                />
-              </div>
-            </div> */}
-
-            {/* <div className="flex flex-col gap-4">
-              <h3>Private content</h3>
-              <IPFSUpload
-                onChange={console.log}
-                keys={{ passphrase, public: pubKey, private: privKey }}
-              />
-            </div> */}
 
             <button
               onClick={onSave}

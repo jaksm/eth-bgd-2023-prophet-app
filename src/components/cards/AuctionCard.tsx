@@ -1,6 +1,7 @@
 import { IconCircleDotFilled } from "@tabler/icons-react";
 import { useCall } from "@usedapp/core";
-import { memo, useState } from "react";
+import { type BigNumber } from "ethers";
+import { memo } from "react";
 import { useSignedContract } from "../../hooks/useSIgnedContract";
 import { Avatar } from "../Avatar";
 import { Button } from "../Button";
@@ -9,22 +10,46 @@ import { Price } from "../Price";
 import { Rating } from "../Rating";
 
 type AuctionProps = {
-  index: number;
+  index: string;
   title: string;
   description: string;
   sellerReputation?: number;
+  onClick?: (dealId: BigNumber) => void;
+};
+
+export const getStatus = (status?: number) => {
+  switch (status) {
+    case 0:
+      return "Active";
+    case 1:
+      return "Closed";
+    case 2:
+      return "Sold";
+  }
 };
 
 // eslint-disable-next-line react/display-name
 export const AuctionCard = memo(
-  ({ index, title, description, sellerReputation = 5 }: AuctionProps) => {
-    const [placeBidModalVisible, setPlaceBidModalVisible] = useState(false);
+  ({
+    index,
+    title,
+    description,
+    sellerReputation = 5,
+    onClick,
+  }: AuctionProps) => {
     const { contract } = useSignedContract();
+    const { value: dealId } =
+      useCall({
+        method: "dealIdByHash",
+        contract,
+        args: [index],
+      }) ?? {};
+
     const { value, error } =
       useCall({
         method: "deals",
         contract,
-        args: [index],
+        args: dealId?.[0] ? [dealId[0]] : [0],
       }) ?? {};
 
     return (
@@ -43,20 +68,30 @@ export const AuctionCard = memo(
               <Copy>{value?.seller || ""}</Copy>
             </div>
 
+            <div className="flex items-center gap-4">
+              <span className="rounded-full bg-orange-500 p-2 px-4 text-sm text-white">
+                {getStatus(value?.status)}
+              </span>
+            </div>
+
             <p className="text tracking-wide text-white/75">{description}</p>
           </section>
 
           <section className="flex items-center justify-end">
-            <Button onClick={() => setPlaceBidModalVisible(true)}>
-              <Price amount={value?.highestBid} />
+            {dealId?.[0] && (
+              <>
+                <Button onClick={() => onClick?.(dealId[0])}>
+                  <Price amount={value?.highestBid} />
 
-              <IconCircleDotFilled
-                size="0.75em"
-                className="mx-2 text-white/75"
-              />
+                  <IconCircleDotFilled
+                    size="0.75em"
+                    className="mx-2 text-white/75"
+                  />
 
-              <span>Place a bid</span>
-            </Button>
+                  <span>Place a bid</span>
+                </Button>
+              </>
+            )}
           </section>
         </div>
       </figure>

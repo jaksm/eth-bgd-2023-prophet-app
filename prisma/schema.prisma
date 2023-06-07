@@ -18,6 +18,9 @@ model User {
 
     buyer        Buyer?
     informations Information[]
+
+    privateKey String?
+    publicKey  String?
 }
 
 model Seller {

@@ -32,15 +32,17 @@ export interface AbiInterface extends utils.Interface {
     "addReview(address,uint256)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "bid(uint256,uint256)": FunctionFragment;
+    "bid(uint256,uint256,string)": FunctionFragment;
     "closeBidding(uint256)": FunctionFragment;
     "collectFunds()": FunctionFragment;
     "confirmPayment(uint256)": FunctionFragment;
-    "createDeal(string,string)": FunctionFragment;
+    "createDeal(string,string,uint256)": FunctionFragment;
+    "dealIdByHash(string)": FunctionFragment;
     "dealIndex()": FunctionFragment;
     "deals(uint256)": FunctionFragment;
     "defaultOnPayment(uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getDealsLenght()": FunctionFragment;
     "getPendingBid(uint256,uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "name()": FunctionFragment;
@@ -67,10 +69,12 @@ export interface AbiInterface extends utils.Interface {
       | "collectFunds"
       | "confirmPayment"
       | "createDeal"
+      | "dealIdByHash"
       | "dealIndex"
       | "deals"
       | "defaultOnPayment"
       | "getApproved"
+      | "getDealsLenght"
       | "getPendingBid"
       | "isApprovedForAll"
       | "name"
@@ -98,7 +102,7 @@ export interface AbiInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "bid",
-    values: [BigNumberish, BigNumberish]
+    values: [BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "closeBidding",
@@ -114,7 +118,11 @@ export interface AbiInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createDeal",
-    values: [string, string]
+    values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "dealIdByHash",
+    values: [string]
   ): string;
   encodeFunctionData(functionFragment: "dealIndex", values?: undefined): string;
   encodeFunctionData(functionFragment: "deals", values: [BigNumberish]): string;
@@ -125,6 +133,10 @@ export interface AbiInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getApproved",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getDealsLenght",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getPendingBid",
@@ -188,6 +200,10 @@ export interface AbiInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "createDeal", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "dealIdByHash",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "dealIndex", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deals", data: BytesLike): Result;
   decodeFunctionResult(
@@ -196,6 +212,10 @@ export interface AbiInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getDealsLenght",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -325,6 +345,7 @@ export interface Abi extends BaseContract {
     bid(
       dealId: BigNumberish,
       bidAmount: BigNumberish,
+      _pk: string,
       overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -345,8 +366,11 @@ export interface Abi extends BaseContract {
     createDeal(
       _hash: string,
       _dscHash: string,
+      _startPrice: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    dealIdByHash(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     dealIndex(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -364,6 +388,8 @@ export interface Abi extends BaseContract {
         string,
         string,
         BigNumber,
+        BigNumber,
+        BigNumber,
         BigNumber
       ] & {
         seller: string;
@@ -376,6 +402,8 @@ export interface Abi extends BaseContract {
         cid: string;
         endBlock: BigNumber;
         payWindow: BigNumber;
+        startPrice: BigNumber;
+        dealIndex: BigNumber;
       }
     >;
 
@@ -388,6 +416,8 @@ export interface Abi extends BaseContract {
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    getDealsLenght(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getPendingBid(
       dealId: BigNumberish,
@@ -481,6 +511,7 @@ export interface Abi extends BaseContract {
   bid(
     dealId: BigNumberish,
     bidAmount: BigNumberish,
+    _pk: string,
     overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -501,8 +532,11 @@ export interface Abi extends BaseContract {
   createDeal(
     _hash: string,
     _dscHash: string,
+    _startPrice: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  dealIdByHash(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   dealIndex(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -520,6 +554,8 @@ export interface Abi extends BaseContract {
       string,
       string,
       BigNumber,
+      BigNumber,
+      BigNumber,
       BigNumber
     ] & {
       seller: string;
@@ -532,6 +568,8 @@ export interface Abi extends BaseContract {
       cid: string;
       endBlock: BigNumber;
       payWindow: BigNumber;
+      startPrice: BigNumber;
+      dealIndex: BigNumber;
     }
   >;
 
@@ -544,6 +582,8 @@ export interface Abi extends BaseContract {
     tokenId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  getDealsLenght(overrides?: CallOverrides): Promise<BigNumber>;
 
   getPendingBid(
     dealId: BigNumberish,
@@ -631,6 +671,7 @@ export interface Abi extends BaseContract {
     bid(
       dealId: BigNumberish,
       bidAmount: BigNumberish,
+      _pk: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -649,8 +690,11 @@ export interface Abi extends BaseContract {
     createDeal(
       _hash: string,
       _dscHash: string,
+      _startPrice: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<BigNumber>;
+
+    dealIdByHash(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     dealIndex(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -668,6 +712,8 @@ export interface Abi extends BaseContract {
         string,
         string,
         BigNumber,
+        BigNumber,
+        BigNumber,
         BigNumber
       ] & {
         seller: string;
@@ -680,6 +726,8 @@ export interface Abi extends BaseContract {
         cid: string;
         endBlock: BigNumber;
         payWindow: BigNumber;
+        startPrice: BigNumber;
+        dealIndex: BigNumber;
       }
     >;
 
@@ -692,6 +740,8 @@ export interface Abi extends BaseContract {
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    getDealsLenght(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPendingBid(
       dealId: BigNumberish,
@@ -815,6 +865,7 @@ export interface Abi extends BaseContract {
     bid(
       dealId: BigNumberish,
       bidAmount: BigNumberish,
+      _pk: string,
       overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -833,8 +884,11 @@ export interface Abi extends BaseContract {
     createDeal(
       _hash: string,
       _dscHash: string,
+      _startPrice: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
+
+    dealIdByHash(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     dealIndex(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -849,6 +903,8 @@ export interface Abi extends BaseContract {
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    getDealsLenght(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPendingBid(
       dealId: BigNumberish,
@@ -941,6 +997,7 @@ export interface Abi extends BaseContract {
     bid(
       dealId: BigNumberish,
       bidAmount: BigNumberish,
+      _pk: string,
       overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -961,7 +1018,13 @@ export interface Abi extends BaseContract {
     createDeal(
       _hash: string,
       _dscHash: string,
+      _startPrice: BigNumberish,
       overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    dealIdByHash(
+      arg0: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     dealIndex(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -980,6 +1043,8 @@ export interface Abi extends BaseContract {
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    getDealsLenght(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getPendingBid(
       dealId: BigNumberish,

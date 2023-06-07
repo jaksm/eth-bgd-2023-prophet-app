@@ -5,7 +5,8 @@ import {
   IconPlus,
   IconShieldBolt,
 } from "@tabler/icons-react";
-import { useEtherBalance, useEthers } from "@usedapp/core";
+import { useContractFunction, useEtherBalance, useEthers } from "@usedapp/core";
+import { type BigNumber } from "ethers";
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
@@ -17,6 +18,7 @@ import { OwnedItemCard } from "../../components/cards/OwnedItemCard";
 import { CreateAuctionDialog } from "../../components/dialogs/CreateAuctionDialog";
 import { currency } from "../../components/formatter";
 import { LayoutSidebar } from "../../components/layouts/LayoutSidebar";
+import { useSignedContract } from "../../hooks/useSIgnedContract";
 import { api } from "../../utils/api";
 
 const Sell: NextPage = () => {
@@ -25,6 +27,19 @@ const Sell: NextPage = () => {
 
   const auctions = api.auctions.getAll.useQuery();
   const [createAuctionDialog, setCreateAuctionDialog] = useState(false);
+
+  const { contract } = useSignedContract();
+  const closeDeal = useContractFunction(contract, "closeBidding", {
+    transactionName: "auction/close",
+  });
+
+  const handleCloseAuction = async (dealId: BigNumber) => {
+    try {
+      await closeDeal.send(dealId);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <>
@@ -135,7 +150,8 @@ const Sell: NextPage = () => {
               {(auctions.data || []).map((auction, i) => (
                 <div key={i}>
                   <AuctionListCard
-                    index={i}
+                    index={auction.id}
+                    onCloseAuction={handleCloseAuction}
                     title={auction.information.title}
                     description={auction.information.description}
                     createdAt={auction.createdAt}

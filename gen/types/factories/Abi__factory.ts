@@ -154,6 +154,11 @@ const _abi = [
         name: "bidAmount",
         type: "uint256",
       },
+      {
+        internalType: "string",
+        name: "_pk",
+        type: "string",
+      },
     ],
     name: "bid",
     outputs: [],
@@ -205,16 +210,40 @@ const _abi = [
         name: "_dscHash",
         type: "string",
       },
+      {
+        internalType: "uint256",
+        name: "_startPrice",
+        type: "uint256",
+      },
     ],
     name: "createDeal",
     outputs: [
       {
-        internalType: "bool",
+        internalType: "uint256",
         name: "",
-        type: "bool",
+        type: "uint256",
       },
     ],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    name: "dealIdByHash",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -290,6 +319,16 @@ const _abi = [
         name: "payWindow",
         type: "uint256",
       },
+      {
+        internalType: "uint256",
+        name: "startPrice",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "dealIndex",
+        type: "uint256",
+      },
     ],
     stateMutability: "view",
     type: "function",
@@ -321,6 +360,19 @@ const _abi = [
         internalType: "address",
         name: "",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getDealsLenght",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",

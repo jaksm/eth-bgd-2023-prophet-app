@@ -6,13 +6,18 @@ import { Grid } from "../components/Grid";
 import { Search } from "../components/Search";
 import { useSearchAuctions } from "../hooks/useSearch";
 
+import { type BigNumber } from "ethers";
 import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 import { AuctionCard } from "../components/cards/AuctionCard";
 import { AuctionListCard } from "../components/cards/AuctionListCard";
+import { CreateBidDialog } from "../components/dialogs/CreateBidDialog";
 import { LayoutSidebar } from "../components/layouts/LayoutSidebar";
 
 const Home: NextPage = () => {
   const auctions = api.auctions.getAll.useQuery();
+  const [isOpen, setIsOpen] = useState(false);
+  const [dealId, setDealId] = useState<BigNumber>();
 
   const search = useSearchAuctions();
 
@@ -25,6 +30,11 @@ const Home: NextPage = () => {
       </Head>
       <LayoutSidebar>
         <main className="flex min-h-screen flex-col justify-center">
+          <CreateBidDialog
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+            dealId={dealId as BigNumber}
+          />
           <div className="container mx-auto flex flex-col justify-center gap-12 px-4">
             <Search onChange={search.setValue} />
 
@@ -44,7 +54,7 @@ const Home: NextPage = () => {
                     {(search.results || []).map((auction, i) => (
                       <motion.div key={i}>
                         <AuctionListCard
-                          index={i}
+                          index={auction.id}
                           title={auction.information.title}
                           description={auction.information.description}
                           totalBids={auction.bids.length}
@@ -65,10 +75,14 @@ const Home: NextPage = () => {
               items={auctions.data || []}
               renderItem={(auction, i) => (
                 <AuctionCard
-                  index={i}
+                  index={auction.id}
                   key={i}
                   title={auction.information.title}
                   description={auction.information.description}
+                  onClick={(dealId) => {
+                    setDealId(dealId);
+                    setIsOpen(true);
+                  }}
                 />
               )}
             />

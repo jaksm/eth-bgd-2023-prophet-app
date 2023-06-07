@@ -1,28 +1,45 @@
 import { formatEther } from "@ethersproject/units";
-import { IconCurrencyEthereum, IconTriangle } from "@tabler/icons-react";
+import { IconCircle, IconCurrencyEthereum } from "@tabler/icons-react";
 import { useCall } from "@usedapp/core";
 import { formatDistanceToNow, subMinutes } from "date-fns";
+import { type BigNumber } from "ethers";
 import { memo } from "react";
 import { useSignedContract } from "../../hooks/useSIgnedContract";
-import { ButtonLink } from "../Button";
+import { Button } from "../Button";
+import { getStatus } from "./AuctionCard";
 
 type AuctionProps = {
-  index: number;
+  index: string;
   title: string;
   description: string;
   totalBids?: number;
   createdAt?: Date;
+  onCloseAuction?: (dealId: BigNumber) => void;
 };
 
 // eslint-disable-next-line react/display-name
 export const AuctionListCard = memo(
-  ({ index, title, description, totalBids, createdAt }: AuctionProps) => {
+  ({
+    index,
+    title,
+    description,
+    totalBids,
+    createdAt,
+    onCloseAuction,
+  }: AuctionProps) => {
     const { contract } = useSignedContract();
-    const { value } =
+    const { value: dealId } =
+      useCall({
+        method: "dealIdByHash",
+        contract,
+        args: [index],
+      }) ?? {};
+
+    const { value, error } =
       useCall({
         method: "deals",
         contract,
-        args: [index],
+        args: dealId?.[0] ? [dealId[0]] : [0],
       }) ?? {};
 
     return (
@@ -40,8 +57,14 @@ export const AuctionListCard = memo(
               )}
             </div>
             <div className="flex w-full items-center justify-end gap-2">
-              {totalBids && (
-                <IconTriangle size="1em" className="text-green-500" />
+              {getStatus(value?.status) === "Active" && (
+                <IconCircle size="1em" className="text-green-500" />
+              )}
+              {getStatus(value?.status) === "Closed" && (
+                <IconCircle size="1em" className="text-yellow-500" />
+              )}
+              {getStatus(value?.status) === "Sold" && (
+                <IconCircle size="1em" className="text-red-500" />
               )}
               <span className="text-xs text-white/50">
                 {/* @TODO: add totalBids the chain */}
@@ -65,9 +88,16 @@ export const AuctionListCard = memo(
           </section>
 
           <section className="-mr-2 flex min-w-max flex-col items-center justify-end ">
-            <ButtonLink href="/auctions/1" variant="text">
-              <span>View Auction</span>
-            </ButtonLink>
+            {onCloseAuction &&
+              value?.dealIndex &&
+              getStatus(value?.status) === "Active" && (
+                <Button
+                  onClick={() => onCloseAuction(value.dealIndex)}
+                  variant="text"
+                >
+                  <span>Close Auction</span>
+                </Button>
+              )}
           </section>
         </div>
       </figure>
