@@ -26,3 +26,7 @@ You can check out the [create-t3-app GitHub repository](https://github.com/t3-os
 ## How do I deploy this?
 
 Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+
+- [ ] deal.closed -> otvara se send info modal
+- [ ] u info modal se unosi fajl, enkriptuje se sa kupcevim public key i tako salje na IPFS od koga dobijamo CID koji se salje na contract
+- [ ] kada je contract.cid !== null, onda se korisniku otvara modal da preuzme fajl i dekriptuje ga svojim private keyem

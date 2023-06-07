@@ -2,24 +2,71 @@ import { IconCheck, IconFile, IconLoader, IconX } from "@tabler/icons-react";
 import * as IPFS from "ipfs-core";
 import { useCallback, useState } from "react";
 import { useDropzone, type DropzoneOptions } from "react-dropzone";
-import { encrypt } from "../utils/encrypt";
 
 type State = "idle" | "uploading" | "uploaded" | "error";
 
 type IPFSUploadProps = {
   onChange: (cid: string) => void;
-  keys: Parameters<typeof encrypt>[1];
+  pubKey?: string;
 };
 
-export function IPFSUpload({ onChange, keys }: IPFSUploadProps) {
+function stringToUint8Array(str: string, maxLength: number): Uint8Array {
+  let uint8Array = new TextEncoder().encode(str);
+
+  if (uint8Array.length > maxLength) {
+    uint8Array = uint8Array.slice(0, maxLength);
+  }
+
+  return uint8Array;
+}
+
+function base64ToUint8Array(base64String: string): Uint8Array {
+  let uint8Array = new Uint8Array(new Buffer(base64String, "base64"));
+
+  if (uint8Array.length > 65) {
+    uint8Array = uint8Array.slice(0, 65);
+  }
+
+  return uint8Array;
+}
+
+async function encryptViaPublicKey(pubKey: string, value: any) {
+  const key = await window.crypto.subtle.importKey(
+    "spki",
+    new TextEncoder().encode(pubKey),
+    {
+      name: "RSA-OAEP",
+      hash: "SHA-256",
+    },
+    true,
+    ["encrypt"]
+  );
+
+  return window.crypto.subtle.encrypt(
+    {
+      name: "RSA-OAEP",
+    },
+    key,
+    new TextEncoder().encode(value)
+  );
+}
+
+export function IPFSUpload({ onChange, pubKey }: IPFSUploadProps) {
   const [state, setState] = useState<State>("idle");
 
   const onDrop: DropzoneOptions["onDrop"] = async (acceptedFiles) => {
     setState("uploading");
+    const node = await IPFS.create({ repo: "ok" + Math.random() });
 
     try {
-      const node = await IPFS.create();
-      const encrypted = await encrypt(acceptedFiles[0], keys);
+      if (!pubKey) {
+        console.error("No public key");
+        return;
+      }
+
+      const encrypted = await encryptViaPublicKey(pubKey, acceptedFiles[0]);
+
+      console.log("asd", encrypted);
 
       // const upload = await node.add({
       //   path: acceptedFiles[0].name,
@@ -30,14 +77,14 @@ export function IPFSUpload({ onChange, keys }: IPFSUploadProps) {
 
       setState("uploaded");
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
       setState("error");
     }
   };
 
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
     useDropzone({
-      onDrop: useCallback(onDrop, [keys]),
+      onDrop: useCallback(onDrop, [pubKey]),
       maxFiles: 1,
     });
 

@@ -1,7 +1,7 @@
 import { IconCircleDotFilled } from "@tabler/icons-react";
 import { useCall } from "@usedapp/core";
 import { type BigNumber } from "ethers";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { useSignedContract } from "../../hooks/useSIgnedContract";
 import { Avatar } from "../Avatar";
 import { Button } from "../Button";
@@ -14,7 +14,13 @@ type AuctionProps = {
   title: string;
   description: string;
   sellerReputation?: number;
+  isSoldModalOpen?: boolean;
   onClick?: (dealId: BigNumber) => void;
+  onSold?: (
+    dealId: BigNumber,
+    highestBidder: string,
+    buyerPubKey: string
+  ) => void;
 };
 
 export const getStatus = (status?: number) => {
@@ -36,6 +42,8 @@ export const AuctionCard = memo(
     description,
     sellerReputation = 5,
     onClick,
+    onSold,
+    isSoldModalOpen,
   }: AuctionProps) => {
     const { contract } = useSignedContract();
     const { value: dealId } =
@@ -51,6 +59,18 @@ export const AuctionCard = memo(
         contract,
         args: dealId?.[0] ? [dealId[0]] : [0],
       }) ?? {};
+
+    useEffect(() => {
+      if (isSoldModalOpen) return;
+
+      if (getStatus(value?.status) === "Closed") {
+        if (dealId && value?.highestBidder && value?.highestBiddersPK) {
+          console.log(dealId[0], value?.highestBidder, value?.highestBiddersPK);
+          onSold?.(dealId[0], value?.highestBidder, value?.highestBiddersPK);
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
       <figure className="cursor-default rounded-3xl border border-white/20 bg-stone-800/20 p-4 text-white">
