@@ -1,32 +1,56 @@
-# Create T3 App
+# The Prophet App
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## Project Overview
 
-## What's next? How do I make an app with this?
+The Prophet App is a decentralized platform that allows users to create and participate in prediction markets on various topics. In these markets, users can make predictions about future events, with outcomes determined by smart contracts on the Ethereum blockchain. The app ensures trustless and transparent market operations, enhancing the reliability and fairness of the predictions made on the platform. Additionally, certain data is stored off-chain using IPFS to maintain decentralized storage and accessibility.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Getting Started
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+### Prerequisites
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+ - Node.js (v18 or higher)
+ - Yarn or npm
+ - Docker (for containerized deployment)
 
-## Learn More
+### Installation
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+Clone the repository:
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+ ```bash
+ git clone https://github.com/jaksm/eth-bgd-2023-prophet-app.git
+ cd eth-bgd-2023-prophet-app
+ ```
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+ Install dependencies:
 
-## How do I deploy this?
+ ```bash
+ npm install
+ ```
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+ Configure environment variables:
 
-- [ ] deal.closed -> otvara se send info modal
-- [ ] u info modal se unosi fajl, enkriptuje se sa kupcevim public key i tako salje na IPFS od koga dobijamo CID koji se salje na contract
-- [x] kada je contract.cid !== null, onda se korisniku otvara modal da preuzme fajl i dekriptuje ga svojim private keyem
+ Copy `.env.example` to `.env` and update the values as needed.
+
+ ### Running the Application
+
+ To start the development server, run:
+
+ ```bash
+ npm run dev
+ ```
+
+ This will start the Next.js development server, and you can access the app at `http://localhost:3000`.
+
+ ### Deployment
+
+ To deploy the application using Docker, run:
+
+ ```bash
+ docker-compose up --build
+ ```
+
+ This will build and start the application in a containerized environment.
+
+ ### Smart Contract Deployment
+
+ The `prophet.sol` contract can be deployed using tools like Hardhat or Truffle. Make sure to update the ABI and contract address in the application once deployed.
