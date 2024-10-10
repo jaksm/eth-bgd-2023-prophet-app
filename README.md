@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-The Prophet App is a decentralized platform that allows users to create and participate in prediction markets on various topics. In these markets, users can make predictions about future events, with outcomes determined by smart contracts on the Ethereum blockchain. The app ensures trustless and transparent market operations, enhancing the reliability and fairness of the predictions made on the platform. Additionally, certain data is stored off-chain using IPFS to maintain decentralized storage and accessibility.
+The Prophet App is a decentralized platform that allows users to create and participate in prediction markets on various topics. In these markets, users can trade their predictions about the future events, with outcomes determined by smart contracts on the Ethereum blockchain. The app ensures trustless and transparent market operations, enhancing the reliability and fairness of the predictions made on the platform. Additionally, certain data is stored off-chain using IPFS to maintain decentralized storage and accessibility.
 
 ## Getting Started
 
